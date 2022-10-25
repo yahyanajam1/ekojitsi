@@ -175,7 +175,7 @@ class EkoJitsiPluginActivity : JitsiMeetActivity() {
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         );
-        this.ekoLayout!!.setPadding(25, 25, 25, 25)
+        this.ekoLayout!!.setPadding(24, 24, 24, 24)
 
         this.ekoLayout!!.gravity = Gravity.LEFT;
         var logoParentlayout: LinearLayout = LinearLayout(this);

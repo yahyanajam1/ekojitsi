@@ -180,7 +180,7 @@ _joinMeeting() async {
 <a name="jitsimeetingoptions"></a>
 
 ### JitsiMeetingOptions
-
+/*
 | Field             | Required  | Default           | Description |
  ------------------ | --------- | ----------------- | ----------- |
 | room              | Yes       | N/A               | Unique room name that will be appended to serverURL. Valid characters: alphanumeric, dashes, and underscores. |
@@ -194,7 +194,7 @@ _joinMeeting() async {
 | userAvatarURL     | N/A       | none              | *Not yet implemented*. User's avatar URL. |
 | token             | N/A       | none              | JWT token used for authentication. |
 | featureFlags      | No        | see below         | Map of feature flags and their values (true/false), used to enable/disable features of the Jitsi Meet SDK |
-
+*/
 <a name="jitsimeetingresponse"></a>
 
 #### FeatureFlags
@@ -303,7 +303,7 @@ _onError(error) {
 
 ### Closing a Meeting Programmatically
 ```dart
-JitsiMeet.closeMeeting();
+//JitsiMeet.closeMeeting();
 ```
 
 <a name="contributing"></a>
