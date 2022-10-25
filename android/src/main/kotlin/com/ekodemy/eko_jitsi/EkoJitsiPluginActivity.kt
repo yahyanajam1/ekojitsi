@@ -209,7 +209,7 @@ class EkoJitsiPluginActivity : JitsiMeetActivity() {
             ViewGroup.LayoutParams.WRAP_CONTENT,
             100
         );
-        btnTag.text = "Whiteboard";
+        btnTag.text = "Slider";
         btnTag.id = View.generateViewId();
         btnTag.setBackgroundColor(Color.BLACK);
         if (EkoJitsiPluginActivity.whiteboardUrl != null) {
@@ -218,10 +218,10 @@ class EkoJitsiPluginActivity : JitsiMeetActivity() {
                 EkoJitsiEventStreamHandler.instance.onWhiteboardClicked();
 //                Toast.makeText(this, "Whiteboard", Toast.LENGTH_SHORT).show()
                 val alert: AlertDialog.Builder = AlertDialog.Builder(this)
-                alert.setTitle("Whiteboard")
+                alert.setTitle("Slider")
 
                 val wv = WebView(this)
-                wv.loadUrl(whiteboardUrl)
+                wv.loadUrl(whiteboardUrl!!)
                 wv.webViewClient = object : WebViewClient() {
                     override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
                         view.loadUrl(url)

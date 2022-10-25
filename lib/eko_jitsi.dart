@@ -43,13 +43,13 @@ class EkoJitsi {
   /// Joins a meeting based on the JitsiMeetingOptions passed in.
   /// A JitsiMeetingListener can be attached to this meeting that will automatically
   /// be removed when the meeting has ended
-  static Future<JitsiMeetingResponse> joinMeeting(JitsiMeetingOptions options,
+  static Future<JitsiMeetingResponse> joinMeeting(JitsiMeetingOptions? options,
       {EkoJitsiListener? listener,
       Map<RoomNameConstraintType, RoomNameConstraint>?
           roomNameConstraints}) async {
     assert(options != null, "options are null");
-    assert(options.room != null, "room is null");
-    assert(options.room!.trim().isNotEmpty, "room is empty");
+    assert(options!.room != null, "room is null");
+    assert(options!.room!.trim().isNotEmpty, "room is empty");
 
     // If no constraints given, take default ones
     // (To avoid using constraint, just give an empty Map)
@@ -58,7 +58,7 @@ class EkoJitsi {
     }
 
     if (Platform.isIOS) {
-      options.featureFlags[FeatureFlagEnum.PIP_ENABLED] = false;
+      options!.featureFlags[FeatureFlagEnum.PIP_ENABLED] = false;
       options.featureFlags[FeatureFlagEnum.IOS_RECORDING_ENABLED] = false;
       options.featureFlags[FeatureFlagEnum.IOS_SCREENSHARING_ENABLED] = false;
     }
@@ -68,12 +68,12 @@ class EkoJitsi {
     if (roomNameConstraints.isNotEmpty) {
       for (RoomNameConstraint constraint in roomNameConstraints.values) {
         assert(
-            constraint.checkConstraint(options.room), constraint.getMessage());
+            constraint.checkConstraint(options!.room), constraint.getMessage());
       }
     }
 
     // Validate serverURL is absolute if it is not null or empty
-    if (options.serverURL?.isNotEmpty ?? false) {
+    if (options!.serverURL?.isNotEmpty ?? false) {
       assert(Uri.parse(options.serverURL!).isAbsolute,
           "URL must be of the format <scheme>://<host>[/path], like https://someHost.com");
     }

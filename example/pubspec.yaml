@@ -13,8 +13,8 @@ dependencies:
 
   eko_jitsi:
     path: ../
-  shared_preferences: ^2.0.5
-  modal_bottom_sheet: ^2.0.0
+  shared_preferences: ^2.0.15
+  modal_bottom_sheet: ^2.1.2
 
 
 

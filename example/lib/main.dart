@@ -139,7 +139,7 @@ class _MyAppState extends State<MyApp> {
                 SizedBox(
                   height: 64.0,
                   width: double.maxFinite,
-                  child: RaisedButton(
+                  child: MaterialButton(
                     onPressed: () {
                       _joinMeeting();
                     },
@@ -210,6 +210,7 @@ class _MyAppState extends State<MyApp> {
         ..audioOnly = isAudioOnly
         ..audioMuted = isAudioMuted
         ..videoMuted = isVideoMuted
+        ..whiteboardUrl='https://www.youtube.com'
         ..featureFlags.addAll(featureFlags);
 
       debugPrint("JitsiMeetingOptions: $options");
@@ -232,7 +233,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   static final Map<RoomNameConstraintType, RoomNameConstraint>
-      customContraints = {
+      customConstraints = {
     RoomNameConstraintType.MAX_LENGTH: new RoomNameConstraint((value) {
       return value.trim().length <= 50;
     }, "Maximum room name length should be 30."),
