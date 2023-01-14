@@ -3,7 +3,7 @@
     <application>
         <activity
             android:name=".EkoJitsiPluginActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize|smallestScreenSize"
+            android:configChanges="keyboard|orientation|screenLayout|screenSize|smallestScreenSize"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:exported="true"

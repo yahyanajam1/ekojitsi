@@ -1,11 +1,12 @@
 package com.ekodemy.eko_jitsi
 
-import android.app.AlertDialog
+import android.app.Dialog
 import android.app.KeyguardManager
 import android.content.*
 import android.content.BroadcastReceiver
 import android.content.res.Configuration
 import android.graphics.Color
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -13,6 +14,8 @@ import android.view.*
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.*
+import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import com.ekodemy.eko_jitsi.EkoJitsiPlugin.Companion.EKO_JITSI_CLOSE
 import com.ekodemy.eko_jitsi.EkoJitsiPlugin.Companion.EKO_JITSI_TAG
 import com.facebook.react.ReactRootView
@@ -20,6 +23,16 @@ import com.facebook.react.views.text.ReactTextView
 import com.facebook.react.views.view.ReactViewGroup
 import org.jitsi.meet.sdk.*
 import java.util.*
+import android.view.inputmethod.InputMethodManager
+
+import android.content.Context
+
+import android.R.layout
+
+import android.R.attr.data
+
+
+
 
 
 /**
@@ -82,13 +95,13 @@ class EkoJitsiPluginActivity : JitsiMeetActivity() {
         }
         if (isInPictureInPictureMode == false && onStopCalled) {
             // Picture-in-Picture mode has been closed, we can (should !) end the call
-            getJitsiView().leave()
+                //getJitsiView().leave()
         }
     }
 
     private val myReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            when (intent?.action) {
+            when (intent.action) {
                 EKO_JITSI_CLOSE -> finish()
             }
         }
@@ -156,11 +169,13 @@ class EkoJitsiPluginActivity : JitsiMeetActivity() {
             return;
         }
         try {
-            var jitsiView: JitsiMeetView = jitsiView;
+            val jitsiView: JitsiMeetView = jitsiView;
             Log.d(EKO_JITSI_TAG, "ABC " + jitsiView.javaClass.canonicalName);
-            var ab = jitsiView.getRootReactView(jitsiView);
-            Log.d(EKO_JITSI_TAG, "ABC " + ab.javaClass.canonicalName);
-            var rootReactView: ReactRootView = ab as ReactRootView;
+            val ab = getRootReactView(jitsiView);
+            if (ab != null) {
+                Log.d(EKO_JITSI_TAG, "ABC " + ab.javaClass.canonicalName)
+            };
+            val rootReactView: ReactRootView = ab as ReactRootView;
             Log.d(EKO_JITSI_TAG, "ABC " + rootReactView.javaClass.canonicalName);
             logContentView(rootReactView.rootViewGroup, "");
         } catch (ex: Exception) {
@@ -216,13 +231,17 @@ class EkoJitsiPluginActivity : JitsiMeetActivity() {
             btnTag.setTextColor(Color.WHITE);
             btnTag.setOnClickListener {
                 EkoJitsiEventStreamHandler.instance.onWhiteboardClicked();
-//                Toast.makeText(this, "Whiteboard", Toast.LENGTH_SHORT).show()
+                  //Toast.makeText(this, "Whiteboard", Toast.LENGTH_SHORT).show()
+
+
                 val alert: AlertDialog.Builder = AlertDialog.Builder(this)
                 alert.setTitle("Slider")
+
 
                 val wv = WebView(this)
                 wv.loadUrl(whiteboardUrl!!)
                 wv.webViewClient = object : WebViewClient() {
+                    @Deprecated("Deprecated in Java")
                     override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
                         view.loadUrl(url)
                         return true
@@ -232,10 +251,35 @@ class EkoJitsiPluginActivity : JitsiMeetActivity() {
                 wv.settings.javaScriptCanOpenWindowsAutomatically = true;
                 wv.settings.domStorageEnabled = true;
 
-                alert.setView(wv)
                 alert.setNegativeButton("Close",
                     DialogInterface.OnClickListener { dialog, id -> dialog.dismiss() });
+
+                alert.setView(wv)
+
+                /*
+                val d: Dialog = alert.setView(View(this)).create()
+                val lp: WindowManager.LayoutParams = WindowManager.LayoutParams()
+                lp.copyFrom(d.window!!.attributes)
+                lp.width = WindowManager.LayoutParams.MATCH_PARENT
+                lp.height = WindowManager.LayoutParams.MATCH_PARENT
+
+                val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
+                val height = (resources.displayMetrics.heightPixels * 0.90).toInt()
+
+                d.window!!.setLayout(width, height);
+                d.window!!.attributes = lp
+
+                d.show()
+                */
+
                 alert.show()
+
+
+
+                /*
+                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(whiteboardUrl!!))
+                ContextCompat.startActivity(context!!, browserIntent, null)
+                */
             }
 
         } else {
@@ -268,7 +312,7 @@ class EkoJitsiPluginActivity : JitsiMeetActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        turnScreenOffAndKeyguardOn();
+        turnScreenOffAndKeyguardOn()
     }
 
     private fun turnScreenOnAndKeyguardOff() {
@@ -279,7 +323,7 @@ class EkoJitsiPluginActivity : JitsiMeetActivity() {
 
             // If you want to display the keyguard to prompt the user to unlock the phone:
             val keyguardManager = getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
-            keyguardManager?.requestDismissKeyguard(this, null)
+            keyguardManager.requestDismissKeyguard(this, null)
         } else {
             // For older versions, do it as you did before.
             window.addFlags(
@@ -310,14 +354,17 @@ class EkoJitsiPluginActivity : JitsiMeetActivity() {
     }
 }
 
-fun BaseReactView<JitsiMeetViewListener>.getRootReactView(view: JitsiMeetView): Any {
+fun getRootReactView(view: JitsiMeetView): Any? {
 
-    return BaseReactView::class.java.getDeclaredField("reactRootView").let {
+    return ReactRootView::class.java.getDeclaredField("reactRootView").let {
         it.isAccessible = true;
-        val value = it.get(view);
+        val value = it.get(view)
         //todo
         return@let value;
     }
 
-//    return this.reactRootView;
+
+//return this.reactRootView;
+
+
 }

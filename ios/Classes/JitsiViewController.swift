@@ -12,6 +12,7 @@ class JitsiViewController: UIViewController {
     var roomName:String? = nil
     var serverUrl:URL? = nil
     var subject:String? = nil
+    var boardURL:String? = nil
     var audioOnly:Bool? = false
     var audioMuted: Bool? = false
     var videoMuted: Bool? = false
@@ -117,8 +118,30 @@ extension JitsiViewController: JitsiMeetViewDelegate {
         var mutatedData = data
         mutatedData?.updateValue("onConferenceWillJoin", forKey: "event")
         self.eventSink?(mutatedData)
+
+        let button = UIButton()
+
+                button.backgroundColor = .black
+
+                button.frame = CGRect(x: 0, y: 0, width: 100, height: 40)
+
+                button.setTitle(" SLIDER ", for: .normal)
+
+                jitsiMeetView!.addSubview(button)
+
+                button.translatesAutoresizingMaskIntoConstraints = false
+                button.trailingAnchor.constraint(equalTo: jitsiMeetView!.trailingAnchor, constant:  -20).isActive=true
+
+                button.addTarget(self, action: #selector(btnTap), for: .touchUpInside)
+
+
     }
-    
+
+    @objc func btnTap( sender : AnyObject){
+            let url = URL(string: self.boardURL!)
+            UIApplication.shared.open(url!,options: [:],completionHandler: nil)
+       }
+
     func conferenceJoined(_ data: [AnyHashable : Any]!) {
         //        print("CONFERENCE JOINED")
         var mutatedData = data

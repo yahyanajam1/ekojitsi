@@ -16,6 +16,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+
   final serverText = TextEditingController();
   final roomText = TextEditingController(text: "plugintestroom");
   final subjectText = TextEditingController(text: "My Plugin Test Meeting");
@@ -210,7 +211,7 @@ class _MyAppState extends State<MyApp> {
         ..audioOnly = isAudioOnly
         ..audioMuted = isAudioMuted
         ..videoMuted = isVideoMuted
-        ..whiteboardUrl='https://github.com/'
+        ..whiteboardUrl='https://www.github.com/'
         ..featureFlags.addAll(featureFlags);
 
       debugPrint("JitsiMeetingOptions: $options");

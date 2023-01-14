@@ -19,7 +19,7 @@ import java.net.URL
 
 
 /** EkoJitsiPlugin */
-public class EkoJitsiPlugin() : FlutterPlugin, MethodCallHandler, ActivityAware {
+public class    EkoJitsiPlugin() : FlutterPlugin, MethodCallHandler, ActivityAware {
 
     // The MethodChannel that will hold the communication between Flutter and native Android
     // This local reference serves to register the plugin with the Flutter Engine and unregister it

@@ -54,6 +54,6 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     //upgraded with latest version
-    implementation ('org.jitsi.react:jitsi-meet-sdk:5.1.0') { transitive = true }
+    implementation ('org.jitsi.react:jitsi-meet-sdk:7.0.1') { transitive = true }
 
 }

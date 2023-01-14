@@ -52,17 +52,17 @@ public class SwiftEkoJitsiPlugin: NSObject, FlutterPlugin, FlutterStreamHandler 
                         self.jitsiViewController?.serverUrl = URL(string: serverURL);
                     }
                     let subject = myArgs["subject"] as? String
+                    let boardURL = myArgs["whiteboardUrl"] as? String
                     let displayName = myArgs["userDisplayName"] as? String
                     let email = myArgs["userEmail"] as? String
                     let token = myArgs["token"] as? String
 
-
                     self.jitsiViewController?.roomName = roomName;
                     self.jitsiViewController?.subject = subject;
+                    self.jitsiViewController?.boardURL = boardURL;
                     self.jitsiViewController?.jistiMeetUserInfo.displayName = displayName;
                     self.jitsiViewController?.jistiMeetUserInfo.email = email;
                     self.jitsiViewController?.token = token;
-
 
                     if let avatarURL = myArgs["userAvatarURL"] as? String {
                         self.jitsiViewController?.jistiMeetUserInfo.avatar = URL(string: avatarURL);
