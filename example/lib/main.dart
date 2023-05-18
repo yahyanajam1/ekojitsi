@@ -162,27 +162,27 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  _onAudioOnlyChanged(bool value) {
+  _onAudioOnlyChanged(bool ? value) {
     setState(() {
-      isAudioOnly = value;
+      isAudioOnly = value!;
     });
   }
 
-  _onAudioMutedChanged(bool value) {
+  _onAudioMutedChanged(bool ? value) {
     setState(() {
-      isAudioMuted = value;
+      isAudioMuted = value!;
     });
   }
 
-  _onVideoMutedChanged(bool value) {
+  _onVideoMutedChanged(bool ? value) {
     setState(() {
-      isVideoMuted = value;
+      isVideoMuted = value!;
     });
   }
 
-  _joinMeeting() async {
-    String serverUrl =
-        serverText.text?.trim()?.isEmpty ?? "" ? null : serverText.text;
+  _joinMeeting() async {  
+    String ? serverUrl =
+        serverText.text.trim().isEmpty ? null : serverText.text;
 
     try {
       // Enable or disable any feature flag here
@@ -236,11 +236,11 @@ class _MyAppState extends State<MyApp> {
   static final Map<RoomNameConstraintType, RoomNameConstraint>
       customConstraints = {
     RoomNameConstraintType.MAX_LENGTH: new RoomNameConstraint((value) {
-      return value.trim().length <= 50;
+      return value!.trim().length <= 50;
     }, "Maximum room name length should be 30."),
     RoomNameConstraintType.FORBIDDEN_CHARS: new RoomNameConstraint((value) {
       return RegExp(r"[$€£]+", caseSensitive: false, multiLine: false)
-              .hasMatch(value) ==
+              .hasMatch(value!) ==
           false;
     }, "Currencies characters aren't allowed in room names."),
   };

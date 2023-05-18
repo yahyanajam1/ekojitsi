@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class LifeCycleManger extends StatefulWidget {
   final Widget child;
 
-  LifeCycleManger({Key key, this.child}) : super(key: key);
+  LifeCycleManger(Key key, this.child) : super(key: key);
   _LifeCycleMangerState createState() => _LifeCycleMangerState();
 }
 
@@ -43,7 +43,7 @@ class _LifeCycleMangerState extends State<LifeCycleManger>
 
   Future<bool> getBoolPreference() async {
     SharedPreferences prefs = await _prefs;
-    bool op = prefs.getBool('checkmeet');
+    bool? op = prefs.getBool('checkmeet');
     if (op == null) {
       op = false;
     }

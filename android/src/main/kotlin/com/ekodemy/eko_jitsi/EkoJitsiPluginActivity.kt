@@ -1,12 +1,11 @@
 package com.ekodemy.eko_jitsi
 
-import android.app.Dialog
 import android.app.KeyguardManager
 import android.content.*
 import android.content.BroadcastReceiver
 import android.content.res.Configuration
 import android.graphics.Color
-import android.net.Uri
+import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -15,7 +14,6 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
 import com.ekodemy.eko_jitsi.EkoJitsiPlugin.Companion.EKO_JITSI_CLOSE
 import com.ekodemy.eko_jitsi.EkoJitsiPlugin.Companion.EKO_JITSI_TAG
 import com.facebook.react.ReactRootView
@@ -23,16 +21,6 @@ import com.facebook.react.views.text.ReactTextView
 import com.facebook.react.views.view.ReactViewGroup
 import org.jitsi.meet.sdk.*
 import java.util.*
-import android.view.inputmethod.InputMethodManager
-
-import android.content.Context
-
-import android.R.layout
-
-import android.R.attr.data
-
-
-
 
 
 /**
@@ -45,6 +33,7 @@ class EkoJitsiPluginActivity : JitsiMeetActivity() {
         var whiteboardUrl: String? = null;
         var classroomLogoId: Int? = null;
         var context: Context? = null;
+
 
         @JvmStatic
         fun launchActivity(
@@ -79,7 +68,7 @@ class EkoJitsiPluginActivity : JitsiMeetActivity() {
 
     var onStopCalled: Boolean = false;
     var ekoLayout: LinearLayout? = null;
-
+    //var jitsiView: JitsiMeetView ? = null
 
     override fun onPictureInPictureModeChanged(
         isInPictureInPictureMode: Boolean,
@@ -153,16 +142,53 @@ class EkoJitsiPluginActivity : JitsiMeetActivity() {
         turnScreenOnAndKeyguardOff();
     }
 
+    //START
     override fun onPostCreate(savedInstanceState: Bundle?) {
         Log.i(EKO_JITSI_TAG, "ABC Post Create");
         super.onPostCreate(savedInstanceState);
-//        logContentView(getWindow().getDecorView(), "");
+        logContentView(getWindow().getDecorView(), "");
         val view = window.decorView as ViewGroup;
         Log.d(EKO_JITSI_TAG, "ABC " + view.javaClass.canonicalName);
+
+        for (i in 0 until view.childCount) {}
+
         val layout: LinearLayout = view.getChildAt(0) as LinearLayout;
         prepareWhiteboardLayout(layout);
 
+        /*
+
+        val jitsiMeetView = JitsiMeetView(this)
+
+        val button = Button(this)
+        val gradientDrawable = GradientDrawable()
+        gradientDrawable.shape = GradientDrawable.RECTANGLE
+        gradientDrawable.cornerRadius = 12f
+
+        gradientDrawable.setColor(Color.WHITE)
+
+        button.text = " ☰ "
+        button.setBackgroundColor(Color.WHITE);
+        // Set the button's position and size
+        button.setTextColor(Color.BLACK);
+
+        button.background = gradientDrawable
+
+        val layoutParams = FrameLayout.LayoutParams(
+            FrameLayout.LayoutParams.WRAP_CONTENT,
+            FrameLayout.LayoutParams.WRAP_CONTENT
+        )
+        layoutParams.gravity = Gravity.BOTTOM or Gravity.START
+        layoutParams.setMargins(106, 0, 0, 24)
+
+        button.layoutParams = layoutParams
+        button.layoutParams.width = 60
+        button.layoutParams.height = 72
+
+// Add the button to the Jitsi view
+        (jitsiView as FrameLayout).addView(button)
+        */
     }
+    //END
 
     fun test() {
         if(true){
@@ -184,13 +210,14 @@ class EkoJitsiPluginActivity : JitsiMeetActivity() {
 //        var jitsiFragment: Fragment? = getSupportFragmentManager().findFragmentById(R.id.jitsiFragment);
     }
 
+    //START
     fun prepareWhiteboardLayout(layout: LinearLayout) {
         this.ekoLayout = LinearLayout(this);
         this.ekoLayout!!.layoutParams = LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         );
-        this.ekoLayout!!.setPadding(24, 24, 24, 24)
+        this.ekoLayout!!.setPadding(20, 20, 20, 20)
 
         this.ekoLayout!!.gravity = Gravity.LEFT;
         var logoParentlayout: LinearLayout = LinearLayout(this);
@@ -208,8 +235,9 @@ class EkoJitsiPluginActivity : JitsiMeetActivity() {
             ViewGroup.LayoutParams.WRAP_CONTENT,
             100
         );
+
         logoImage.id = View.generateViewId();
-        logoImage.scaleType = ImageView.ScaleType.FIT_START;
+        logoImage.scaleType = ImageView.ScaleType.FIT_START
         logoImage.adjustViewBounds = true;
 
         var btnParentlayout: LinearLayout = LinearLayout(this);
@@ -217,26 +245,25 @@ class EkoJitsiPluginActivity : JitsiMeetActivity() {
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         );
+
         btnParentlayout.gravity = Gravity.RIGHT;
 
         val btnTag = Button(this)
         btnTag.layoutParams = LinearLayout.LayoutParams(
-            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.MATCH_PARENT,
             100
         );
-        btnTag.text = "Slider";
+        btnTag.text = "Sidebar Menu";
         btnTag.id = View.generateViewId();
-        btnTag.setBackgroundColor(Color.BLACK);
+        btnTag.setBackgroundColor(Color.BLUE);
         if (EkoJitsiPluginActivity.whiteboardUrl != null) {
             btnTag.setTextColor(Color.WHITE);
             btnTag.setOnClickListener {
                 EkoJitsiEventStreamHandler.instance.onWhiteboardClicked();
                   //Toast.makeText(this, "Whiteboard", Toast.LENGTH_SHORT).show()
 
-
                 val alert: AlertDialog.Builder = AlertDialog.Builder(this)
                 alert.setTitle("Slider")
-
 
                 val wv = WebView(this)
                 wv.loadUrl(whiteboardUrl!!)
@@ -293,6 +320,7 @@ class EkoJitsiPluginActivity : JitsiMeetActivity() {
         this.ekoLayout!!.addView(btnParentlayout);
         layout.addView(ekoLayout, 0);
     }
+    //END
 
     fun logContentView(parent: View, indent: String) {
         if (parent is ReactViewGroup) {
