@@ -40,7 +40,7 @@ android {
 
     defaultConfig {
         applicationId "com.ekodemy.eko_jitsi_example"
-        minSdkVersion 23 //Required for Jitsi
+        minSdkVersion 24 //Required for Jitsi
         targetSdkVersion 33
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName

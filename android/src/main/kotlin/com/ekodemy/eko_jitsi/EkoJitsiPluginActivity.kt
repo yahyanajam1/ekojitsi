@@ -3,7 +3,9 @@ package com.ekodemy.eko_jitsi
 import android.app.KeyguardManager
 import android.content.*
 import android.content.BroadcastReceiver
+import android.content.res.ColorStateList
 import android.content.res.Configuration
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
@@ -13,14 +15,17 @@ import android.view.*
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.*
+import android.widget.FrameLayout
 import androidx.appcompat.app.AlertDialog
 import com.ekodemy.eko_jitsi.EkoJitsiPlugin.Companion.EKO_JITSI_CLOSE
 import com.ekodemy.eko_jitsi.EkoJitsiPlugin.Companion.EKO_JITSI_TAG
 import com.facebook.react.ReactRootView
 import com.facebook.react.views.text.ReactTextView
 import com.facebook.react.views.view.ReactViewGroup
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import org.jitsi.meet.sdk.*
 import java.util.*
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
 
 /**
@@ -147,10 +152,15 @@ class EkoJitsiPluginActivity : JitsiMeetActivity() {
         Log.i(EKO_JITSI_TAG, "ABC Post Create");
         super.onPostCreate(savedInstanceState);
         logContentView(getWindow().getDecorView(), "");
+
         val view = window.decorView as ViewGroup;
+
+        //val view = window.decorView.findViewById<ViewGroup>(android.R.id.content)
+
         Log.d(EKO_JITSI_TAG, "ABC " + view.javaClass.canonicalName);
 
-        for (i in 0 until view.childCount) {}
+
+        //for (i in 0 until view.childCount) {}
 
         val layout: LinearLayout = view.getChildAt(0) as LinearLayout;
         prepareWhiteboardLayout(layout);
@@ -187,6 +197,7 @@ class EkoJitsiPluginActivity : JitsiMeetActivity() {
 // Add the button to the Jitsi view
         (jitsiView as FrameLayout).addView(button)
         */
+
     }
     //END
 
@@ -255,33 +266,57 @@ class EkoJitsiPluginActivity : JitsiMeetActivity() {
         );
         btnTag.text = "Sidebar Menu";
         btnTag.id = View.generateViewId();
-        btnTag.setBackgroundColor(Color.BLUE);
+        btnTag.setBackgroundColor(Color.DKGRAY);
+
         if (EkoJitsiPluginActivity.whiteboardUrl != null) {
             btnTag.setTextColor(Color.WHITE);
             btnTag.setOnClickListener {
                 EkoJitsiEventStreamHandler.instance.onWhiteboardClicked();
                   //Toast.makeText(this, "Whiteboard", Toast.LENGTH_SHORT).show()
 
-                val alert: AlertDialog.Builder = AlertDialog.Builder(this)
-                alert.setTitle("Slider")
+                //val alert: AlertDialog.Builder = AlertDialog.Builder(this)
+                //alert.setTitle("Sidebar Menu")
 
                 val wv = WebView(this)
-                wv.loadUrl(whiteboardUrl!!)
+
+                val progressBar = ProgressBar(this)
+
+                val bottomSheetDialog = BottomSheetDialog(this)
+
+                //val linearLayout = RelativeLayout(this)
+
+                progressBar.indeterminateTintList = ColorStateList.valueOf(Color.WHITE)
                 wv.webViewClient = object : WebViewClient() {
+
                     @Deprecated("Deprecated in Java")
                     override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
                         view.loadUrl(url)
                         return true
                     }
+
+                    override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+                        // Show the progress bar when the page starts loading
+                        progressBar.visibility = View.VISIBLE
+                    }
+
+                    override fun onPageFinished(view: WebView?, url: String?) {
+                        // Hide the progress bar when the page finishes loading
+                        progressBar.visibility = View.GONE
+                    }
+
                 }
+                wv.loadUrl(whiteboardUrl!!)
                 wv.settings.javaScriptEnabled = true;
                 wv.settings.javaScriptCanOpenWindowsAutomatically = true;
                 wv.settings.domStorageEnabled = true;
 
+                /*
                 alert.setNegativeButton("Close",
                     DialogInterface.OnClickListener { dialog, id -> dialog.dismiss() });
 
                 alert.setView(wv)
+                alert.show()
+                */
 
                 /*
                 val d: Dialog = alert.setView(View(this)).create()
@@ -299,14 +334,48 @@ class EkoJitsiPluginActivity : JitsiMeetActivity() {
                 d.show()
                 */
 
-                alert.show()
-
-
-
                 /*
                 val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(whiteboardUrl!!))
                 ContextCompat.startActivity(context!!, browserIntent, null)
                 */
+
+                val layoutParams = FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.WRAP_CONTENT,
+                    FrameLayout.LayoutParams.WRAP_CONTENT
+                )
+
+                layoutParams.gravity = Gravity.CENTER_HORIZONTAL or Gravity.CENTER_VERTICAL
+                progressBar.layoutParams = layoutParams
+                (jitsiView as FrameLayout).addView(progressBar)
+
+                /*
+                linearLayout.layoutParams = RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.MATCH_PARENT,
+                    RelativeLayout.LayoutParams.MATCH_PARENT
+                )
+                // Set the background color
+                linearLayout.setBackgroundColor(Color.RED) // Replace with your desired color
+
+                // Add other views to the LinearLayout
+                linearLayout.addView(wv)
+                */
+                bottomSheetDialog.setContentView(wv)
+
+                // Inflate the layout for the bottom sheet
+               // val sheetView = layoutInflater.inflate(linearLayout, null)
+
+                // Customize the bottom sheet view as needed
+                // For example, you can find and configure views within the sheetView
+
+                // Set the view for the bottom sheet dialog
+                //bottomSheetDialog.setContentView(wv as View)
+
+                val behavior = BottomSheetBehavior.from(wv.parent as View)
+                behavior.state = BottomSheetBehavior.STATE_EXPANDED
+
+                // Show the bottom sheet dialog
+                bottomSheetDialog.show()
+
             }
 
         } else {
